@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.vb.openlibraries.android.security.AESCrypto;
+import com.vb.openlibraries.android.security.ActualAESCrypto;
 import com.vb.openlibraries.android.security.ActualKeyGenerator;
 import com.vb.openlibraries.android.security.KeyGenerator;
 
@@ -28,8 +29,8 @@ public class ActivityTest extends ActionBarActivity {
                 byte[] key = keyGenerator.generateKey(16);
                 byte[] iv = keyGenerator.generateKey(16);
                 byte[] data = "salut".getBytes();
-                byte[] crypted = AESCrypto.encrypt(data, key, iv, "AES/CBC/PKCS5Padding");
-                byte[] decrypted = AESCrypto.decrypt(crypted, key, 16, "AES/CBC/PKCS5Padding");
+                byte[] crypted = ActualAESCrypto.encrypt(data, key, iv, "AES/CBC/PKCS5Padding");
+                byte[] decrypted = ActualAESCrypto.decrypt(crypted, key, 16, "AES/CBC/PKCS5Padding");
                 String result = new String(decrypted);
                 Log.d("crypto", result);
             }

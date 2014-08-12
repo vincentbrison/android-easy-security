@@ -25,24 +25,13 @@ public abstract class AESCrypto {
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
         Cipher cipher = null;
         byte[] encryptedData = null;
-        byte[] ivAndEncryptedData = null;
+
         try {
             cipher = Cipher.getInstance(algo);
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec);
             encryptedData = cipher.doFinal(clearData);
 
-            // Generate iv + encrypted data
-            ivAndEncryptedData = new byte[encryptedData.length + iv.length];
 
-            // Set IV in result
-            for (int i = 0; i < iv.length; i++) {
-                ivAndEncryptedData[i] = iv[i];
-            }
-
-            // Set encrypted data
-            for (int i = iv.length; i < ivAndEncryptedData.length; i++) {
-                ivAndEncryptedData[i] = encryptedData[i - iv.length];
-            }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
@@ -56,22 +45,10 @@ public abstract class AESCrypto {
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
-        return ivAndEncryptedData;
+        return encryptedData;
     }
 
-    public static byte[] decrypt(byte[] encryptedData, byte[] key, int ivLength, String algo) {
-
-        // Extract iv
-        byte[] iv = new byte[ivLength];
-        for (int i = 0; i < ivLength; i++) {
-            iv[i] = encryptedData[i];
-        }
-
-        // Extract data to decrypt
-        byte[] dataToDecrypt = new byte[encryptedData.length - ivLength];
-        for (int i = 0; i < encryptedData.length - ivLength; i++) {
-            dataToDecrypt[i] = encryptedData[i + ivLength];
-        }
+    public static byte[] decrypt(byte[] encryptedData, byte[] key, byte[] iv, String algo) {
 
         SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
         IvParameterSpec ivSpec = new IvParameterSpec(iv);
@@ -80,7 +57,7 @@ public abstract class AESCrypto {
         try {
             cipher = Cipher.getInstance(algo);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
-            clearData = cipher.doFinal(dataToDecrypt);
+            clearData = cipher.doFinal(encryptedData);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
