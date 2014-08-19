@@ -1,4 +1,4 @@
-package com.vb.openlibraries.android.security;
+package com.vb.openlibraries.android.security.crypto.generators.interfaces;
 
 /**
  * Created by Brize on 11/08/2014.

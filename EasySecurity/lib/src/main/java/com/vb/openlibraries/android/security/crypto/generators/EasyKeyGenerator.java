@@ -1,27 +1,30 @@
-package com.vb.openlibraries.android.security;
+package com.vb.openlibraries.android.security.crypto.generators;
 
+
+import com.vb.openlibraries.android.security.crypto.generators.interfaces.KeyGenerator;
+import com.vb.openlibraries.android.security.crypto.generators.patchs.PRNGFixes;
 
 import java.security.SecureRandom;
 
 /**
  * Created by Brize on 11/08/2014.
  */
-public class ActualKeyGenerator implements KeyGenerator{
+public class EasyKeyGenerator implements KeyGenerator {
 
     private boolean mSecurityPatchesHasBeenApplied = false;
 
     private final SecureRandom mSecureRandom;
 
-    private static ActualKeyGenerator sInstance = null;
+    private static EasyKeyGenerator sInstance = null;
 
-    public static ActualKeyGenerator getInstance() {
+    public static EasyKeyGenerator getInstance() {
         if (sInstance == null) {
-            sInstance = new ActualKeyGenerator();
+            sInstance = new EasyKeyGenerator();
         }
         return sInstance;
     }
 
-    private ActualKeyGenerator() {
+    private EasyKeyGenerator() {
         if (!mSecurityPatchesHasBeenApplied) {
             PRNGFixes.apply();
         }
